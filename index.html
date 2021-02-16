@@ -8,6 +8,131 @@
     <title>Всяки штуки</title>
 </head>
 <body>
-<div>ex-snippets - Всяки штуки</div>
+    <style>
+        * {
+            outline: none;
+        }
+        html, body {
+            min-height: 100%;
+        }
+        body {
+            background-image: url('./img/559458ec25fe0.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            font-family: 'Verdana';
+        }
+        input {
+            border-radius: 5px;
+            border: 0px;
+            padding: 10px 15px;
+            font-size: 14px;
+            margin-top: 10px;
+            background-color: rgba(255, 255, 255, 0.9);
+            color: #020202;
+        }
+        input:focus {
+            background-color: rgba(255, 255, 255, 1);
+        }
+
+        input[type='number'] {
+            -moz-appearance:textfield;
+        }
+
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+        }
+        .percent {
+
+        }
+        .percentPart {
+            display: flex;
+            flex-direction: column;
+            margin-right: 10px;
+        }
+        .calcResultWrapper {
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+        .calcResult {
+            min-height: 25px;
+            border-radius: 3px;
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            text-align: center;
+        }
+        #calcit {
+            padding: 10px;
+            border: 0;
+            border-radius: 2px;
+        }
+    </style>
+    <div style="display: flex; justify-content:center;">
+        <div style="padding: 10px 20px; margin-top: 20%; background-color: rgba(255, 255, 255, 0.5); border-radius: 5px; max-width: 1280px;">
+            <div class="percent">
+                <div style="display: flex;">
+                    <div class="percentPart">
+                        <input type="number" id="depo" placeholder="Начальный депозит">
+                    </div>
+                    <div class="percentPart">
+                        <input type="number" id="percent" placeholder="Средний процент за день">
+                    </div>
+                    <div class="percentPart">
+                        <input type="number" id="days" placeholder="Количество дней">
+                    </div>
+                </div>
+                <div class="calcResultWrapper">
+                    <div class="calcResult"></div>
+                </div>
+
+                <div class="percentPart">
+                    <button id="calcit">Расчитать</button>
+                </div>
+            </div>
+        </div>
+    </div>
+<script lang="js">
+    // Alternative to load event
+    document.onreadystatechange = function () {
+        if (document.readyState === 'complete') {
+            document.getElementById('calcit').onclick = () => {
+                let deposit = Number.parseFloat(document.getElementById('depo').value) || 0;
+                let percent = Number.parseFloat(document.getElementById('percent').value) || 0;
+                let days = Number.parseFloat(document.getElementById('days').value) || 0;
+                if (!deposit || !days) {
+                    document.querySelector('.calcResult').innerHTML = '0';
+                } else {
+                    document.querySelector('.calcResult').innerHTML = calc(deposit, percent, days);
+                }
+            };
+        }
+    };
+
+    function calc(depo, percentPerDay, days) {
+        let result = depo;
+        for (let i = 0; i < days; i++) {
+            result += result*(percentPerDay / 100);
+        }
+
+        let dirtyStr = String(Math.round(result));
+        if (dirtyStr.length > 20) {
+            return 'Too much ( > 99 999 999 999 999 999 999)';
+        }
+
+        let clean = '';
+
+        for (let i = dirtyStr.length - 1, j = 1; i >= 0; i--, j++) {
+            clean = dirtyStr[i] + clean;
+            if (j === 3) {
+                j = 0;
+                clean = ' ' + clean;
+            }
+        }
+
+        return clean.trim();
+    }
+</script>
 </body>
 </html>
